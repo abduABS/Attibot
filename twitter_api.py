@@ -22,6 +22,11 @@ auth = tweepy.OAuthHandler(api_key,api_key_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
-public_tweets = api.home_timeline()
+number_of_tweets=200
+tweets = api.user_timeline(screen_name='abdusallouh')
 
-print(public_tweets)
+for tweet in tweets:
+    print(tweet.text)
+
+
+
