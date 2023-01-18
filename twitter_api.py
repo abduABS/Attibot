@@ -1,8 +1,10 @@
 import tweepy
 import configparser
 import pandas as pd
+import pickle
 
-#read configs
+
+# Read configs
 config = configparser.ConfigParser(interpolation=None)
 config.read('config.ini')
 
@@ -16,12 +18,14 @@ access_token_secret = config['attibot']['secret']
 client_ID = config['twitter']['client_ID']
 client_Id_secret = config['twitter']['client_Id_secret']
 
+# Read the model
+with open('api_model.pkl', 'rb') as file:
+    model = pickle.load(file)
 
-#authentication
+# Authentication
 auth = tweepy.OAuthHandler(api_key,api_key_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
-
 
 # Account to track
 track_account = "TheAttiBot"
@@ -43,7 +47,7 @@ tweet_id = mentions[0].id
 # Print the most recent mention
 print(most_recent_mention)
 
-#tweepy client
+# Tweepy client
 client = tweepy.Client(bearer_token=bearer_token)
 response = client.search_recent_tweets(keyword)
 
@@ -51,8 +55,11 @@ tweets = response[0]
 
 # Convert the list of dictionaries to a pandas DataFrame
 df = pd.DataFrame(tweets)
-df = df.drop(columns=["edit_history_tweet_ids","id"])
+df = df.drop(columns=["edit_history_tweet_ids", "id"])
 print(df)
+
+# Predict the sentiment
+print(model.predict(df))
 
 # for tweet in response[0]:
 #     print(tweet)
