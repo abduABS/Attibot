@@ -1,8 +1,6 @@
 import tweepy
 import configparser
-import pandas as pd
-import pickle
-
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 # Read configs
 config = configparser.ConfigParser(interpolation=None)
@@ -17,10 +15,6 @@ access_token_secret = config['attibot']['secret']
 
 client_ID = config['twitter']['client_ID']
 client_Id_secret = config['twitter']['client_Id_secret']
-
-# Read the model
-with open('api_model.pkl', 'rb') as file:
-    model = pickle.load(file)
 
 # Authentication
 auth = tweepy.OAuthHandler(api_key,api_key_secret)
@@ -37,7 +31,6 @@ mentions = api.search_tweets(q=f"@{track_account}", count=1)
 most_recent_mention = mentions[0].text
 keyword = most_recent_mention.split()[-1].lower()
 
-
 # Extract the user screen name
 screen_name = mentions[0].user.screen_name
 
@@ -49,17 +42,43 @@ print(most_recent_mention)
 
 # Tweepy client
 client = tweepy.Client(bearer_token=bearer_token)
-response = client.search_recent_tweets(keyword)
+response = client.search_recent_tweets(keyword, max_results=10)
 
+# Get the tweets
 tweets = response[0]
 
-# Convert the list of dictionaries to a pandas DataFrame
-df = pd.DataFrame(tweets)
-df = df.drop(columns=["edit_history_tweet_ids", "id"])
-print(df)
+# Initialize the VADER sentiment analyzer
+analyzer = SentimentIntensityAnalyzer()
 
-# Predict the sentiment
-print(model.predict(df))
+# The tweets to be analyzed
+for i in range(len(tweets)):
+    # Get the text of the tweet
+    text = tweets[i]['text']
+    # Get the sentiment scores
+    sentiment_scores = analyzer.polarity_scores(text)
+    # Print the sentiment score
+    print(sentiment_scores)
+    # Get the compound score
+    compound_score = sentiment_scores['compound']
+    # Print the compound score
+    print(compound_score)
+
+# print(tweet)
+# sentiment_scores = analyzer.polarity_scores(tweet)
+# compound_score = sentiment_scores['compound']
+# print(compound_score)
+
+# df = df.drop(columns=["edit_history_tweet_ids", "id"])
+#
+# # Vectorize the tweets
+# vectorizer = CountVectorizer()
+# X = vectorizer.fit_transform(df['text'])
+# X = pd.DataFrame(X.toarray(), columns=vectorizer.get_feature_names_out())
+#
+# print(X)
+#
+# # Predict the sentiment
+# print(model.predict(X))
 
 # for tweet in response[0]:
 #     print(tweet)
