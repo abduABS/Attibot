@@ -42,7 +42,7 @@ print(most_recent_mention)
 
 # Tweepy client
 client = tweepy.Client(bearer_token=bearer_token)
-response = client.search_recent_tweets(keyword, max_results=10)
+response = client.search_recent_tweets(keyword, max_results=20)
 
 # Get the tweets
 tweets = response[0]
@@ -50,50 +50,44 @@ tweets = response[0]
 # Initialize the VADER sentiment analyzer
 analyzer = SentimentIntensityAnalyzer()
 
+sentiment = 0
+
 # The tweets to be analyzed
 for i in range(len(tweets)):
     # Get the text of the tweet
     text = tweets[i]['text']
+
     # Get the sentiment scores
     sentiment_scores = analyzer.polarity_scores(text)
+
     # Print the sentiment score
-    print(sentiment_scores)
+    # print(sentiment_scores)
+
     # Get the compound score
     compound_score = sentiment_scores['compound']
+
     # Print the compound score
-    print(compound_score)
+    # print(compound_score)
 
-# print(tweet)
-# sentiment_scores = analyzer.polarity_scores(tweet)
-# compound_score = sentiment_scores['compound']
-# print(compound_score)
+    # Sum up the compound scores
+    sentiment += compound_score
 
-# df = df.drop(columns=["edit_history_tweet_ids", "id"])
-#
-# # Vectorize the tweets
-# vectorizer = CountVectorizer()
-# X = vectorizer.fit_transform(df['text'])
-# X = pd.DataFrame(X.toarray(), columns=vectorizer.get_feature_names_out())
-#
-# print(X)
-#
-# # Predict the sentiment
-# print(model.predict(X))
+# Overall aggregated sentiment
+sentiment = sentiment / len(tweets)
+rating = 'Positive' if sentiment > 0 else 'Negative'
 
-# for tweet in response[0]:
-#     print(tweet)
+# The reply message
+reply_message = f'I have looked up "{keyword}" on twitter. The average sentiment is {rating} with a score of {sentiment:.2f}.'
+print(reply_message)
 
 
-# Your reply message
-# reply_message = f'I have looked up {most_recent_mention} on twitter. Nothing yet to report.'
-#
-# # Reply to the tweet
-# api.update_status(
-#     f"@{screen_name} {reply_message}",
-#     in_reply_to_status_id=tweet_id
-# )
-#
-# print("Reply sent!")
+# Reply to the tweet
+api.update_status(
+    f"@{screen_name} {reply_message}",
+    in_reply_to_status_id=tweet_id
+)
+
+print("Reply sent!")
 
 
 
