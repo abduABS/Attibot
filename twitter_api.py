@@ -1,18 +1,29 @@
+"""
+The main python file for the Attibot Twitter bot.
+Code has been used in conjecture with code provided from GitHub Copilot, DataCamp, and ChatGPT.
+
+Written by: Abdu Sallouh Twitter: @abdusallouh GitHub: @abduABS
+"""
 import tweepy
 import configparser
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
-# Read configs
+# Read config file
 config = configparser.ConfigParser(interpolation=None)
 config.read('config.ini')
 
+# Import API keys
 api_key = config['twitter']['api_key']
 api_key_secret = config['twitter']['api_key_secret']
+
+# Import bearer token
 bearer_token = config['twitter']['bearer_token']
 
+# Import access token
 access_token = config['attibot']['token']
 access_token_secret = config['attibot']['secret']
 
+# Import client tokens
 client_ID = config['twitter']['client_ID']
 client_Id_secret = config['twitter']['client_Id_secret']
 
@@ -50,6 +61,7 @@ tweets = response[0]
 # Initialize the VADER sentiment analyzer
 analyzer = SentimentIntensityAnalyzer()
 
+# Initialize the sentiment score
 sentiment = 0
 
 # The tweets to be analyzed
@@ -87,6 +99,7 @@ api.update_status(
     in_reply_to_status_id=tweet_id
 )
 
+# Log for debugging
 print("Reply sent!")
 
 
