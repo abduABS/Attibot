@@ -1,9 +1,14 @@
 """
+The secondary python file for the Attibot Twitter bot which contains the development of the NLP algorithm.
 Code used here is a amalgamation of tutorials from DataCamp and Analytics Vidya
+
 Dataset used is a modified version of https://www.kaggle.com/datasets/kazanova/sentiment140
 
-Code has been modified via Github Copilot
+Code has been used in conjecture with code provided from GitHub Copilot, DataCamp, and ChatGPT.
+
+Written by: Abdu Sallouh Twitter: @abdusallouh GitHub: @abduABS
 """
+
 import pandas as pd
 import pickle
 from sklearn.linear_model import LogisticRegression
