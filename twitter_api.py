@@ -38,8 +38,8 @@ api_key_secret = environ['api_key_secret']
 bearer_token = environ['bearer_token']
 
 # Import access token
-access_token = environ['token']
-access_token_secret = environ['secret']
+access_token = environ['atti_token']
+access_token_secret = environ['atti_secret']
 
 # Import client tokens
 client_ID = environ['client_ID']
