@@ -1,1 +1,1 @@
-web: python twitter_api.py
+worker: python twitter_api.py
