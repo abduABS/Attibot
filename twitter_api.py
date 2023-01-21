@@ -56,6 +56,7 @@ track_account = "TheAttiBot"
 # Get the most recent tweet that mentions the track account
 saved_id = ''
 while True:
+    print('Checking for mentions...')
     mentions = api.search_tweets(q=f"@{track_account}", count=1)
 
     # Extract the text of the tweet
@@ -124,7 +125,7 @@ while True:
         # Log for debugging
         print("Reply sent!")
 
-        time.sleep(120)
+    time.sleep(120)
 
 
 
