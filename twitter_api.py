@@ -7,43 +7,44 @@ Written by: Abdu Sallouh Twitter: @abdusallouh GitHub: @abduABS
 import tweepy
 import configparser
 import time
+import pickle
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from os import environ
 
-# # Read config file
-# config = configparser.ConfigParser(interpolation=None)
-# config.read('config.ini')
-#
-# # Import API keys
-# api_key = config['twitter']['api_key']
-# api_key_secret = config['twitter']['api_key_secret']
-#
-# # Import bearer token
-# bearer_token = config['twitter']['bearer_token']
-#
-# # Import access token
-# access_token = config['attibot']['token']
-# access_token_secret = config['attibot']['secret']
-#
-# # Import client tokens
-# client_ID = config['twitter']['client_ID']
-# client_Id_secret = config['twitter']['client_Id_secret']
-
+# Read config file
+config = configparser.ConfigParser(interpolation=None)
+config.read('config.ini')
 
 # Import API keys
-api_key = environ['api_key']
-api_key_secret = environ['api_key_secret']
+api_key = config['twitter']['api_key']
+api_key_secret = config['twitter']['api_key_secret']
 
 # Import bearer token
-bearer_token = environ['bearer_token']
+bearer_token = config['twitter']['bearer_token']
 
 # Import access token
-access_token = environ['atti_token']
-access_token_secret = environ['atti_secret']
+access_token = config['attibot']['token']
+access_token_secret = config['attibot']['secret']
 
 # Import client tokens
-client_ID = environ['client_ID']
-client_Id_secret = environ['client_Id_secret']
+client_ID = config['twitter']['client_ID']
+client_Id_secret = config['twitter']['client_Id_secret']
+
+
+# # Import API keys
+# api_key = environ['api_key']
+# api_key_secret = environ['api_key_secret']
+#
+# # Import bearer token
+# bearer_token = environ['bearer_token']
+#
+# # Import access token
+# access_token = environ['atti_token']
+# access_token_secret = environ['atti_secret']
+#
+# # Import client tokens
+# client_ID = environ['client_ID']
+# client_Id_secret = environ['client_Id_secret']
 
 # Authentication
 auth = tweepy.OAuthHandler(api_key,api_key_secret)
@@ -54,7 +55,14 @@ api = tweepy.API(auth)
 track_account = "TheAttiBot"
 
 # Get the most recent tweet that mentions the track account
+
+# Save the variable
+# Load the variable
 saved_id = ''
+with open('saved_id.pickle', 'rb') as handle:
+    saved_id = pickle.load(handle)
+
+
 while True:
     print('Checking for mentions...')
     mentions = api.search_tweets(q=f"@{track_account}", count=1)
@@ -71,6 +79,8 @@ while True:
 
     if tweet_id != saved_id:
         saved_id = tweet_id
+        with open('saved_id.pickle', 'wb') as handle:
+            pickle.dump(saved_id, handle, protocol=pickle.HIGHEST_PROTOCOL)
         # Print the most recent mention
         print(most_recent_mention)
 
